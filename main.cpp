@@ -5,6 +5,8 @@
 using namespace std;
 using namespace cv;
 
+#define EPSILON 0.0000001
+
 pair<Point,double> circleFromPoints(Point p1, Point p2, Point p3);
 double dist(Point x, Point y);
 
@@ -201,17 +203,21 @@ int main(int argc, char *argv[])  {
 
 pair<Point,double> circleFromPoints(Point p1, Point p2, Point p3)
 {
-    double offset = pow(p2.x, 2) + pow(p2.y, 2);
-    double bc =   (pow(p1.x,2) + pow(p1.y,2) - offset )/2.0;
-    double cd =   (offset - pow(p3.x, 2) - pow(p3.y, 2))/2.0;
+    double offset = p2.x * p2.x + p2.y * p2.y;
+    double bc =   (p1.x * p1.x + p1.y * p1.y - offset ) / 2.0;
+    double cd =   (offset - p3.x * p3.x - p3.y * p3.y) / 2.0;
     double det =  (p1.x - p2.x) * (p2.y - p3.y) - (p2.x - p3.x)* (p1.y - p2.y);
-    double TOL = 0.0000001;
-    if (abs(det) < TOL) { cout<<"POINTS TOO CLOSE"<<endl;return make_pair(Point(0,0),0); }
+
+    if ( abs(det) < EPSILON ) {
+        cout<<"POINTS TOO CLOSE"<< endl;
+
+        return make_pair(Point(0,0),0);
+    }
 
     double idet = 1/det;
     double centerx =  (bc * (p2.y - p3.y) - cd * (p1.y - p2.y)) * idet;
     double centery =  (cd * (p1.x - p2.x) - bc * (p2.x - p3.x)) * idet;
-    double radius = sqrt( pow(p2.x - centerx,2) + pow(p2.y-centery,2));
+    double radius = sqrt( pow(p2.x - centerx, 2) + pow(p2.y-centery,2));
 
     return make_pair(Point(centerx, centery), radius);
 }
