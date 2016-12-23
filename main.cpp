@@ -88,6 +88,7 @@ int main(int argc, char *argv[])  {
 					convexityDefects(tcontours[0], hullsI[0], defects);
 					if (defects.size() >= 3) {
 						vector<Point> palm_points;
+
 						for (int j = 0; j < defects.size(); j++) {
 							int startidx = defects[j][0];
 							Point ptStart(tcontours[0][startidx]);
@@ -133,6 +134,7 @@ int main(int argc, char *argv[])  {
 
 						//Find avg palm centers for the last few frames to stabilize its centers, also find the avg radius
 						palm_centers.push_back(soln_circle);
+						
 						if (palm_centers.size() > 10)
 							palm_centers.erase(palm_centers.begin());
 
